@@ -1,18 +1,15 @@
 require 'open3'
-require 'strscan'
 
 class GemRestorer
   GEM_V_CMD = 'gem -v'
 
   def each
     gem_pristine_warnings.each_line do |line|
-      p "line #{line}"
-      sc = StringScanner.new(line)
-      next unless sc.scan(gem_pristine_regex)
+      line.rstrip!
+      next unless line =~ gem_pristine_regex
 
-      name = sc[1]
-      version = sc[2]
-      p "name #{name}, version: #{version}"
+      name = Regexp.last_match(1)
+      version = Regexp.last_match(2)
       yield name, version
     end
   end
@@ -31,8 +28,8 @@ class GemRestorer
     /
       ^
       Ignoring
-      .* # some characters
-      Try: gem pristine (.+?) --version (.+?) # name and version
+      .*
+      Try:\sgem\spristine\s([^ ]+)\s--version\s([^ ]+)
       $
     /x
   end
