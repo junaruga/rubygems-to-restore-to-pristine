@@ -1,0 +1,13 @@
+dist: xenial
+language: ruby
+cache: bundler
+rvm:
+  - 2.6.3
+  - 2.4.7
+before_install:
+  - gem install bundler
+script:
+  - bundle exec rake
+branches:
+  only:
+    - master

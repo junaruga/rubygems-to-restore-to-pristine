@@ -1,0 +1,13 @@
+# Default config.
+# https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+AllCops:
+  TargetRubyVersion: 2.4
+Metrics/BlockLength:
+  Exclude:
+    - test/**/*
+Style/Documentation:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/MutableConstant:
+  Enabled: false
