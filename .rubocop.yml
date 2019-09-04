@@ -2,6 +2,9 @@
 # https://github.com/bbatsov/rubocop/blob/master/config/default.yml
 AllCops:
   TargetRubyVersion: 2.4
+Metrics/AbcSize:
+  Exclude:
+    - test/**/*
 Metrics/BlockLength:
   Exclude:
     - test/**/*

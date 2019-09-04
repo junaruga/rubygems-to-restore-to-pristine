@@ -3,6 +3,13 @@ require 'open3'
 class GemRestorer
   GEM_V_CMD = 'gem -v'
 
+  def run
+    each do |name, version|
+      sh("gem uninstall -x #{name}")
+      sh("gem install #{name} -v #{version} --user-install")
+    end
+  end
+
   def each
     gem_pristine_warnings.each_line do |line|
       line.rstrip!
@@ -33,4 +40,13 @@ class GemRestorer
       $
     /x
   end
+
+  def sh(cmd)
+    raise "Failed command: #{cmd}" unless system(cmd)
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  restorer = GemRestorer.new
+  restorer.run
 end
