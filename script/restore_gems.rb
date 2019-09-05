@@ -23,7 +23,6 @@ class GemRestorer
 
   def gem_pristine_warnings
     _, stderr, status = Open3.capture3(GEM_V_CMD)
-
     raise "failed command #{gem_v_cmd}" unless status.success?
 
     stderr
@@ -35,8 +34,8 @@ class GemRestorer
     /
       ^
       Ignoring
-      .*
-      Try:\sgem\spristine\s([^ ]+)\s--version\s([^ ]+)
+      .* # some characters
+      Try:\sgem\spristine\s([^ ]+)\s--version\s([^ ]+) # name and version
       $
     /x
   end

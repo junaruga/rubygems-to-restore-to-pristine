@@ -19,8 +19,6 @@ RUN dnf -y install \
   redhat-rpm-config
 
 RUN useradd -m tester
-RUN su - tester
-
 WORKDIR /work
 COPY . .
 RUN chown -R tester:tester /work
