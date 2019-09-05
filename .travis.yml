@@ -4,6 +4,15 @@ cache: bundler
 rvm:
   - 2.6.3
   - 2.4.7
+matrix:
+  include:
+    - name: acceptance_test_fedora
+      language: bash
+      before_install: true
+      install: |
+        docker build --rm -t test/fedora -f ci/Dockerfile-fedora .
+      script: |
+        docker run --rm -t test/fedora
 before_install:
   - gem install bundler
 script:
