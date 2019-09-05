@@ -1,0 +1,48 @@
+ARG CONTAINER_IMAGE=fedora:30
+FROM ${CONTAINER_IMAGE}
+
+RUN echo -e "deltarpm=0\ninstall_weak_deps=0\ntsflags=nodocs" >> /etc/dnf/dnf.conf
+
+# Initialize a condition to install ruby:2.5 module.
+RUN yum -y module reset ruby
+RUN yum -y module enable ruby:2.5
+RUN yum -y upgrade \
+  && dnf -y --allowerasing distro-sync
+RUN yum -y module install ruby:2.5
+
+# Install dependencies for installed gem packages.
+RUN dnf -y install \
+  gcc \
+  make \
+  ruby-devel \
+  rubygem-rdoc \
+  redhat-rpm-config
+
+RUN useradd -m tester
+RUN su - tester
+
+WORKDIR /work
+COPY . .
+RUN chown -R tester:tester /work
+
+USER tester
+RUN ruby -v
+RUN gem -v
+RUN gem install byebug -v 11.0.1 --user-install
+RUN gem install gem2rpm -v 1.0.1 --user-install
+RUN gem install nio4r -v 2.5.1 --user-install
+RUN gem list byebug gem2rpm nio4r
+RUN ls ~/.gem/ruby/gems/
+
+# Switch Ruby module stream from ruby:2.5 to 2.6.
+USER root
+RUN yum -y module reset ruby
+RUN yum -y module enable ruby:2.6
+RUN yum -y --allowerasing distro-sync
+
+# Prepare to test.
+USER tester
+RUN ruby -v
+RUN gem -v
+
+CMD ["test/acceptance.sh"]
