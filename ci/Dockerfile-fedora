@@ -7,11 +7,11 @@ RUN echo -e "deltarpm=0\ninstall_weak_deps=0\ntsflags=nodocs" >> /etc/dnf/dnf.co
 RUN yum -y module reset ruby
 RUN yum -y module enable ruby:2.5
 RUN yum -y upgrade \
-  && dnf -y --allowerasing distro-sync
+  && yum -y --allowerasing distro-sync
 RUN yum -y module install ruby:2.5
 
 # Install dependencies for installed gem packages.
-RUN dnf -y install \
+RUN yum -y install \
   gcc \
   make \
   ruby-devel \
