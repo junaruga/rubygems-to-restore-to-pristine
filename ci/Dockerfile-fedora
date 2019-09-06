@@ -42,5 +42,3 @@ RUN yum -y --allowerasing distro-sync
 USER tester
 RUN ruby -v
 RUN gem -v
-
-CMD ["test/acceptance.sh"]
