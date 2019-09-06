@@ -4,15 +4,31 @@ cache: bundler
 rvm:
   - 2.6.3
   - 2.4.7
+
+.com.github.junaruga.rubygems-to-restore-to-pristine-matrix-definitions:
+  - &test_in_container
+    language: bash
+    before_install: true
+    install: |
+      docker build --rm -t test/fedora -f ci/Dockerfile-fedora .
+    script: |
+      docker run --rm -t test/fedora "${TEST_CMD}"
+
 matrix:
   include:
     - name: acceptance_test_fedora
-      language: bash
-      before_install: true
-      install: |
-        docker build --rm -t test/fedora -f ci/Dockerfile-fedora .
-      script: |
-        docker run --rm -t test/fedora
+      env:
+        - TEST_CMD='test/acceptance.sh'
+      <<: *test_in_container
+    - name: acceptance_test_fedora_gem_pristine
+      env:
+        - TEST_CMD='test/gem_pristine.sh'
+      <<: *test_in_container
+  allow_failures:
+    # gem pristine failed by user permission.
+    # https://github.com/rubygems/rubygems/issues/1968
+    - name: acceptance_test_fedora_gem_pristine
+  fast_finish: true
 before_install:
   - gem install bundler
 script:
