@@ -1,3 +1,10 @@
+##
+# This script is to restore gem packages by reinstalling.
+#
+# = Usage
+#
+#  $ ruby restore_gems.rb
+
 require 'open3'
 
 class GemRestorer
